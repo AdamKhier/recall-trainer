@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14110d">
+<meta name="description" content="Anki-style recall trainer for the Light to the Nations Year 9 &amp; 10 written tests.">
+<title>Recall Trainer · Light to the Nations</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">✦</span>
+      <div class="brand-text">
+        <h1>Light to the Nations</h1>
+        <p id="subtitle">Recall trainer</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="themeBtn" class="icon-btn" type="button" aria-label="Switch theme" title="Switch theme">◐</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HOME ============ -->
+    <section id="homeView" class="view">
+      <p class="lede">
+        Every question from the four written tests, easiest to memorise first.
+        Anything you miss comes back sooner — and keeps coming back until it sticks.
+      </p>
+
+      <div class="seg" id="filterGroup" role="group" aria-label="Filter cards by">
+        <button class="seg-btn active" data-group="chapter" type="button" aria-pressed="true">By chapter</button>
+        <button class="seg-btn" data-group="difficulty" type="button" aria-pressed="false">By difficulty</button>
+      </div>
+
+      <div class="deck-list" id="deckList"></div>
+
+      <div class="panel" id="focusPanel">
+        <div class="panel-head">
+          <h2>Up next</h2>
+          <span id="focusCount" class="pill"></span>
+        </div>
+        <ol class="focus-list" id="focusList"></ol>
+      </div>
+
+      <button id="homeStatsLink" class="stats-strip" type="button">
+        <span id="homeStatsText"></span>
+        <span class="stats-strip-go" aria-hidden="true">Stats →</span>
+      </button>
+
+      <div class="home-cta">
+        <button id="studyBtn" class="primary-btn big" type="button">Start studying</button>
+      </div>
+    </section>
+
+    <!-- ============ STUDY ============ -->
+    <section id="studyView" class="view" hidden>
+      <div class="study-top">
+        <button id="backBtn" class="text-btn" type="button">← Decks</button>
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress"><div class="progress-fill" id="progFill"></div></div>
+        </div>
+        <span class="count" id="progText">0/0</span>
+      </div>
+
+      <div class="card-area">
+        <article class="flashcard" id="flashcard">
+          <div class="card-meta">
+            <span id="cardDeck" class="pill sm"></span>
+            <span id="cardTier" class="tier"></span>
+            <span id="cardSeen" class="muted tiny"></span>
+          </div>
+          <p class="question" id="qText"></p>
+          <div class="answer-box" id="answerBox" hidden>
+            <div class="divider"></div>
+            <p class="answer" id="aText"></p>
+            <p class="note" id="aNote" hidden></p>
+          </div>
+        </article>
+      </div>
+
+      <div class="actions">
+        <button id="revealBtn" class="primary-btn big" type="button">Show answer</button>
+        <div class="grade-row" id="gradeRow" hidden>
+          <button class="grade g0" data-grade="0" type="button"><b>Again</b><kbd>1</kbd></button>
+          <button class="grade g1" data-grade="1" type="button"><b>Hard</b><kbd>2</kbd></button>
+          <button class="grade g2" data-grade="2" type="button"><b>Good</b><kbd>3</kbd></button>
+          <button class="grade g3" data-grade="3" type="button"><b>Easy</b><kbd>4</kbd></button>
+        </div>
+      </div>
+      <p class="hint" id="hint">Space or tap to reveal · 1–4 to grade</p>
+    </section>
+
+    <!-- ============ SUMMARY ============ -->
+    <section id="summaryView" class="view" hidden>
+      <div class="summary-card">
+        <span class="mark big" aria-hidden="true">✦</span>
+        <h2 id="sumTitle">Session complete</h2>
+        <p class="lede" id="sumLede"></p>
+        <div class="stat-grid" id="sumStats"></div>
+        <button id="againBtn" class="primary-btn big" type="button">Study again</button>
+        <button id="sumHomeBtn" class="ghost-btn wide" type="button">Back to decks</button>
+      </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section id="statsView" class="view" hidden>
+      <div class="page-head">
+        <h1 class="page-title">Your progress</h1>
+        <p class="lede">Every card has its own mastery level. A clean recall moves it up a step; a miss drops it back.</p>
+      </div>
+
+      <dl class="stat-row" id="statsRow"></dl>
+      <div class="legend" id="statsLegend"></div>
+      <div id="statsGrids"></div>
+
+      <div class="panel">
+        <div class="panel-split">
+          <div>
+            <h2 class="panel-title">Trickiest cards</h2>
+            <p class="sub">Ranked by mastery, then by how often you miss them.</p>
+          </div>
+          <button id="drillWeakBtn" class="primary-btn" type="button">Drill these</button>
+        </div>
+        <ul class="weak-list" id="statsWeak"></ul>
+      </div>
+
+      <button id="statsResetBtn" class="ghost-btn wide danger-outline" type="button">Reset all progress</button>
+    </section>
+
+    <!-- ============ BROWSE ============ -->
+    <section id="browseView" class="view" hidden>
+      <div class="browse-top">
+        <input id="searchInput" class="search" type="search" placeholder="Search questions and answers…" autocomplete="off">
+      </div>
+      <div id="browseList" class="browse-list"></div>
+      <p id="noResults" class="muted center" hidden>Nothing matches that search.</p>
+    </section>
+  </main>
+
+  <nav id="tabbar" class="tabbar" aria-label="Sections">
+    <div class="tabbar-inner">
+      <button class="tab-btn" data-view="homeView" type="button" aria-current="page">
+        <span class="tab-ico" aria-hidden="true">✦</span>Study
+      </button>
+      <button class="tab-btn" data-view="statsView" type="button">
+        <span class="tab-ico" aria-hidden="true">▤</span>Stats
+      </button>
+      <button class="tab-btn" data-view="browseView" type="button">
+        <span class="tab-ico" aria-hidden="true">⌕</span>Browse
+      </button>
+    </div>
+  </nav>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
